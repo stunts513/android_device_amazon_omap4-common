@@ -49,7 +49,7 @@
 #include <hal_public.h>
 
 //#ifdef ANDROID_API_JB_MR1_OR_LATER
-#include <ion_ti/ion.h>
+#include <../../include/ion_ti/ion.h>
 //#else
 //#include <ion/ion.h>
 //#endif

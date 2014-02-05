@@ -41,7 +41,7 @@
 
 #include <linux/fb.h>
 #include <linux/omapfb.h>
-#include <ion_ti/ion.h>
+#include <../include/ion_ti/ion.h>
 
 #include "hwc_dev.h"
 #include "dock_image.h"
