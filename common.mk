@@ -124,7 +124,7 @@ PRODUCT_PROPERTY_OVERRIDES += \
        ro.moz.has_home_button=0
 
 PRODUCT_COPY_FILES += \
-$(BOWSER_COMMON_FOLDER)/volume.cfg:system/etc/volume.cfg
+$(COMMON_FOLDER)/volume.cfg:system/etc/volume.cfg
 
 $(call inherit-product-if-exists, vendor/amazon/omap4-common/omap4-common-vendor.mk)
 
