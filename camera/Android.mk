@@ -36,6 +36,14 @@ ifdef TI_CAMERAHAL_PROFILING
     CAMERAHAL_CFLAGS += -DCAMERAHAL_OMX_PROFILING
 endif
 
+ifdef TI_CAMERAHAL_MAX_CAMERAS_SUPPORTED
+    CAMERAHAL_CFLAGS += -DMAX_CAMERAS_SUPPORTED=$(TI_CAMERAHAL_MAX_CAMERAS_SUPPORTED)
+endif
+
+ifdef TI_CAMERAHAL_TREAT_FRONT_AS_BACK
+    CAMERAHAL_CFLAGS += -DTREAT_FRONT_AS_BACK
+endif
+
 ifeq ($(findstring omap5, $(TARGET_BOARD_PLATFORM)),omap5)
     CAMERAHAL_CFLAGS += -DCAMERAHAL_OMAP5_CAPTURE_MODES
 endif
@@ -58,7 +66,9 @@ TI_CAMERAHAL_COMMON_INCLUDES := \
     $(LOCAL_PATH)/inc
 
 TI_CAMERAHAL_COMMON_INCLUDES += \
-    frameworks/native/include/media/hardware
+    frameworks/native/include/media/hardware \
+    $(DOMX_PATH)/mm_osal/inc \
+    $(DOMX_PATH)/omx_core/inc
 
 TI_CAMERAHAL_COMMON_SRC := \
     CameraHal_Module.cpp \
@@ -79,7 +89,6 @@ TI_CAMERAHAL_COMMON_SRC := \
     CameraHalCommon.cpp \
     FrameDecoder.cpp \
     SwFrameDecoder.cpp \
-    OmxFrameDecoder.cpp \
     DecoderFactory.cpp
 
 TI_CAMERAHAL_OMX_SRC := \
@@ -94,9 +103,9 @@ TI_CAMERAHAL_OMX_SRC := \
     OMXCameraAdapter/OMXFD.cpp \
     OMXCameraAdapter/OMXFocus.cpp \
     OMXCameraAdapter/OMXMetadata.cpp \
-    OMXCameraAdapter/OMXZoom.cpp
-
-#    OMXCameraAdapter/OMXDccDataSave.cpp \
+    OMXCameraAdapter/OMXZoom.cpp \
+    OMXCameraAdapter/OMXDccDataSave.cpp \
+    OmxFrameDecoder.cpp
 
 TI_CAMERAHAL_USB_SRC := \
     V4LCameraAdapter/V4LCameraAdapter.cpp \
@@ -107,6 +116,7 @@ TI_CAMERAHAL_COMMON_SHARED_LIBRARIES := \
     libbinder \
     libutils \
     libcutils \
+    liblog \
     libtiutils_custom \
     libcamera_client \
     libgui \
@@ -128,7 +138,7 @@ endif
 
 include $(CLEAR_VARS)
 
-CAMERAHAL_CFLAGS += -DOMX_CAMERA_ADAPTER -DV4L_CAMERA_ADAPTER
+CAMERAHAL_CFLAGS += -DOMX_CAMERA_ADAPTER -DV4L_CAMERA_ADAPTER -DUSE_LIBION_TI
 
 LOCAL_SRC_FILES:= \
     $(TI_CAMERAHAL_COMMON_SRC) \
@@ -152,6 +162,12 @@ LOCAL_SHARED_LIBRARIES:= \
 LOCAL_STATIC_LIBRARIES := $(TI_CAMERAHAL_COMMON_STATIC_LIBRARIES)
 
 LOCAL_CFLAGS := -fno-short-enums -DCOPY_IMAGE_BUFFER $(CAMERAHAL_CFLAGS)
+
+ifdef TI_CAMERAHAL_USES_LEGACY_DOMX_DCC
+LOCAL_CFLAGS += -DUSES_LEGACY_DOMX_DCC
+else
+LOCAL_SRC_FILES += OMXCameraAdapter/OMXDCC.cpp
+endif
 
 LOCAL_MODULE_PATH := $(TARGET_OUT_SHARED_LIBRARIES)/hw
 LOCAL_MODULE:= camera.$(TARGET_BOOTLOADER_BOARD_NAME)
