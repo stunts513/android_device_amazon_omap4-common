@@ -49,7 +49,7 @@
 #include <hal_public.h>
 
 #ifdef USE_LIBION_TI
-#include <ion_ti/ion.h>
+#include <../../include/ion_ti/ion.h>
 #else
 #include <ion/ion.h>
 #endif
