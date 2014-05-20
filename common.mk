@@ -143,5 +143,13 @@ PRODUCT_PACKAGES += \
 PRODUCT_COPY_FILES += \
     $(COMMON_FOLDER)/prebuilt/etc/gps.conf:/system/etc/gps.conf
 
+# for Gecko
+PRODUCT_PROPERTY_OVERRIDES += \
+       ro.moz.has_home_button=0
+
+PRODUCT_COPY_FILES += \
+    $(COMMON_FOLDER)/volume.cfg:system/etc/volume.cfg \
+    gonk-misc/bootanimation.zip:system/media/bootanimation.zip
+
 $(call inherit-product-if-exists, vendor/amazon/omap4-common/omap4-common-vendor.mk)
 
